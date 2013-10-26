@@ -1,0 +1,1 @@
+web: gunicorn reminder.wsgi
