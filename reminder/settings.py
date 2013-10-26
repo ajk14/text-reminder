@@ -25,7 +25,7 @@ DATABASES = {
 }
 
 TWILIO_SID = os.environ['AK_TWILIO_SID']
-TWILIO_AUTH_TOKEN = os.environ['AK_TWILIO_SID']
+TWILIO_AUTH_TOKEN = os.environ['AK_TWILIO_AUTH_TOKEN']
 TWILIO_NUMBER = os.environ['AK_TWILIO_NUMBER']
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -163,3 +163,23 @@ LOGGING = {
         },
     }
 }
+
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config()
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Allow all host headers
+ALLOWED_HOSTS = ['*']
+
+# Static asset configuration
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = 'staticfiles'
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)

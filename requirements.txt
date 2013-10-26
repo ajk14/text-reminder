@@ -7,7 +7,6 @@ django-bootstrap-toolkit==2.10.6
 django-registration==0.8
 gunicorn==0.17.2
 httplib2==0.8
-mercurial==2.6-rc
 phonenumbers==5.4b1
 psycopg2==2.4.5
 pytz==2013b
