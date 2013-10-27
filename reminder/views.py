@@ -5,6 +5,7 @@ from reminder.forms import ReminderForm
 from reminder.models import Reminder
 from datetime import datetime
 from twilio.rest import TwilioRestClient
+import time
 
 def home(request):
     context = {}
@@ -22,9 +23,11 @@ def home(request):
 def remind(request):
     reminders = Reminder.objects.all()
     for reminder in reminders:
-        reminder_datetime = datetime.combine(reminder.date, reminder.time)
+        time_string = str(reminder.date) + " " + str(reminder.hour) + " " + str(reminder.minute) + str(reminder.ampm)
+        reminder_datetime = datetime.strptime(time_string, "%Y-%m-%d %I %M%p")
+        print reminder_datetime
         if reminder_datetime <= datetime.now():
-            print str(reminder.date) + " " + str(reminder.time) + " About to remind!"
+            print str(reminder.date) + " " + str(reminder_datetime) + " About to remind!"
             client = TwilioRestClient(settings.TWILIO_SID, settings.TWILIO_AUTH_TOKEN)
             message = client.sms.messages.create(body=reminder.message,
                                              to=reminder.phone,
