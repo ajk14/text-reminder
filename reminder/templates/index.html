@@ -12,6 +12,7 @@ Text Reminders
 <script>
   $(function() {
      $("#id_date").datepicker();
+     $("#id_date").datepicker('setDate', new Date());
    });
 </script>
 
@@ -30,39 +31,23 @@ Text Reminders
 <label for="id_hour">Time</label> 
  </p>
 <select id="id_hour" name="hour">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    <option value="9">9</option>
-    <option value="10">10</option>
-    <option value="11">11</option>
-    <option value="12">12</option>
-  </select>
+  {% for hour in hours  %}
+  <option value="{{hour}}">{{hour}}</option>
+  <p>{{ icon }}</p>
+  {% endfor %}
+</select>
 :
-  <select id="id_minute" name="minute">
-    <option value="00">00</option>
-    <option value="05">05</option>
-    <option value="10">10</option>
-    <option value="15">15</option>
-    <option value="20">20</option>
-    <option value="25">25</option>
-    <option value="30">30</option>
-    <option value="35">35</option>
-    <option value="40">40</option>
-    <option value="45">45</option>
-    <option value="50">50</option>
-    <option value="55">55</option>
-  </select>
+<select id="id_minute" name="minute">
+  {% for minute in minutes  %}
+  <option value="{{minute}}">{{minute}}</option>
+  <p>{{ icon }}</p>
+  {% endfor %}
+</select>
 
-  <select id="id_ampm" name="ampm">
-    <option value="AM">AM</option>
-    <option value="PM">PM</option>
-  </select>
+<select id="id_ampm" name="ampm">
+  <option value="AM">AM</option>
+  <option value="PM">PM</option>
+</select>
 CDT
 </p>
 

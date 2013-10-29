@@ -7,10 +7,15 @@ from datetime import datetime
 from twilio.rest import TwilioRestClient
 import time
 
+MINUTE_CHOICES = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
+HOUR_CHOICES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+
 def home(request):
     context = {}
     reminder_form = ReminderForm()
     context['reminder_form'] = reminder_form
+    context['minutes'] = MINUTE_CHOICES
+    context['hours'] = HOUR_CHOICES
 
     if request.POST:   
         reminder_form = ReminderForm(request.POST)
