@@ -48,7 +48,14 @@ Text Reminders
   <option value="AM">AM</option>
   <option value="PM">PM</option>
 </select>
-CDT
+
+<select id="id_timezone" name="timezone">
+  {% for timezone in timezones  %}
+  <option value="{{timezone}}">{{timezone}}</option>
+  <p>{{ icon }}</p>
+  {% endfor %}
+</select>
+
 </p>
 
 <p>
