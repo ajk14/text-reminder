@@ -7,4 +7,4 @@ class Reminder(models.Model):
     minute = models.IntegerField()
     ampm = models.CharField(max_length=2)
     date = models.DateField()
-    timezone = models.CharField(max_length=3)
+    timezone = models.CharField(max_length=7)
