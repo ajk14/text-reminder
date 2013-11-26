@@ -14,7 +14,7 @@ import pytz
 
 MINUTE_CHOICES = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
 HOUR_CHOICES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
-TIMEZONE_CHOICES = ["PST8PDT", "MST7MDT", "CST6CDT", "EST5EDT"]
+TIMEZONE_CHOICES = {"Pacific" : "PST8PDT", "Mountain" : "MST7MDT", "Central" : "CST6CDT", "Eastern" :"EST5EDT"}
 
 def home(request):
     context = {}
@@ -42,7 +42,7 @@ def remind(request):
         now = datetime.utcnow().replace(tzinfo = pytz.utc)
         if reminder_datetime.astimezone(pytz.utc) < now:
             print "TIME IN THE PAST"
-            print "TIMEZONE" + str(timezone)
+            print "TIMEZONE" + str(TIMEZONE_CHOICES[timezone])
             print "DATETIME" + str(reminder_datetime.astimezone(pytz.utc))
             print "NOW" + str(now)
             client = TwilioRestClient(settings.TWILIO_SID, settings.TWILIO_AUTH_TOKEN)
