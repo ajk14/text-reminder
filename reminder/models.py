@@ -11,5 +11,5 @@ class Reminder(models.Model):
 
 class User(models.Model):
     phone = models.CharField(max_length=20)
-    confirmation = models.IntegerField()
+    confirmation = models.IntegerField(null=True)
     isActive = models.BooleanField()

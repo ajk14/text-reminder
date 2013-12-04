@@ -26,41 +26,73 @@ def home(request):
     context['timezones'] = TIMEZONE_CHOICES
 
     if request.POST:   
-        reminder_form = ReminderForm(request.POST)
-        if reminder_form.is_valid():
-            provided = reminder_form.cleaned_data["phone"]
-            try: 
-                user = User.get(phone=provided)
-                print user
-                if not user.isActive:
-                    return HttpResponseNotFound('<h1>NOT YET ACTIVATED</h1>')
-            except:
-                send_activation(request, provided)
-                context["activating"] = True
-                return render(request, 'templates/index.html', context)
-            reminder_form.save()
-            context['success'] = True
-            return render(request, 'templates/index.html', context)
+        if 'phone_form' in request.POST:
+            return validate_phone(request, context)
         else:
-            return HttpResponseNotFound('<h1>INVALID FORM</h1>')
+            return create_reminder(request, context)
     return render(request, 'templates/index.html', context)
+
+def validate_phone(request, context):
+    phone = request.POST['phone']
+    print request.POST
+    try:
+        user = User.objects.get(phone=phone)
+    except:
+        return HttpResponseNotFound('<h1>User not found</h1>')
+    provided_key = request.POST['code']
+    if user.confirmation == int(provided_key):
+        user.isActive=True
+        user.save()
+    else:
+        return HttpResponseNotFound('<h1>Invalid key</h1>')
+    context['success'] = True
+    return render(request, 'templates/index.html', context)
+
+def create_reminder(request, context):
+    reminder_form = ReminderForm(request.POST)
+    if reminder_form.is_valid():
+        reminder_form.save()
+        provided_phone = reminder_form.cleaned_data["phone"]
+        try:
+            user = User.objects.get(phone=provided_phone)
+        except:
+            user = User.objects.create(phone=provided_phone, isActive=False)
+        if not user.isActive:
+            activation_key = send_activation(request, provided_phone)
+            user.confirmation = activation_key
+            user.save()
+            context["activating"] = True
+            context["phone"] = provided_phone
+            return render(request, 'templates/index.html', context)
+        context['success'] = True
+        return render(request, 'templates/index.html', context)
+    else:
+        return HttpResponseNotFound('<h1>INVALID FORM</h1>')
+
 
 def send_activation(request, phone):
     id = randint(1000000, 9999999) #7 digit numbers w/o leading 0                                
-    User.objects.create(phone=phone, confirmation=id, isActive=False)
     client = TwilioRestClient(settings.TWILIO_SID, settings.TWILIO_AUTH_TOKEN)
-    #message = client.sms.messages.create(body="Your confirmation code for TextMyAlerts.com is: " +
-    #                                         str(id),
-    #                                         to=phone,
-    #                                         from_=settings.TWILIO_NUMBER)
+    message = client.sms.messages.create(body="Your confirmation code for TextMyAlerts.com is: " +
+                                         str(id),
+                                         to=phone,
+                                         from_=settings.TWILIO_NUMBER)
+    return id
 
 def remind(request):
     reminders = Reminder.objects.all()
     for reminder in reminders:
+        try:
+            user = User.objects.get(phone=reminder.phone)
+        except:
+            continue
+        if not user.isActive:
+            continue
         time_string = str(reminder.date) + " " + str(reminder.hour) + ":" + str(reminder.minute) + str(reminder.ampm)
         print reminder.timezone
-        timezone = dateutil.tz.gettz(reminder.timezone)
+        timezone = dateutil.tz.gettz(TIMEZONE_CHOICES[reminder.timezone])
         reminder_datetime = parser.parse(time_string).replace(tzinfo=timezone)
+        print reminder_datetime
         now = datetime.utcnow().replace(tzinfo = pytz.utc)
         if reminder_datetime.astimezone(pytz.utc) < now:
             client = TwilioRestClient(settings.TWILIO_SID, settings.TWILIO_AUTH_TOKEN)

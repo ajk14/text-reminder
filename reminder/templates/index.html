@@ -28,11 +28,16 @@ Text Reminders
     <h3 id="myModalLabel">Confirm Phone Number</h3>
   </div>
   <div class="modal-body">
-    <p>Just to make sure you're not a spammer, we've sent you a verification code. Please enter it below.</p>
+    <p>Just to make sure you're not a spammer, we've sent a verification code to you at {{ phone }}. Please enter it below.</p>
+    <form class="form-signin" action="" method="post" id="phone_verify">
+        {% csrf_token %}
+	Verification Code: <input type="text" name="code"><br>
+	<input type="hidden" name="phone" value="{{phone}}">
+    </form>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    <button class="btn btn-primary">Save changes</button>
+    <input type="submit" class="btn btn-primary" name="phone_form" form="phone_verify" value="Submit"/>
   </div>
 </div>
 </div>
