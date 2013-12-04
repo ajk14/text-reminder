@@ -15,7 +15,7 @@ import pytz
 
 MINUTE_CHOICES = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
 HOUR_CHOICES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
-TIMEZONE_CHOICES = {"Pacific" : "PST8PDT", "Mountain" : "MST7MDT", "Central" : "CST6CDT", "Eastern" :"EST5EDT"}
+TIMEZONE_CHOICES = {"Mountain" : "MST7MDT", "Pacific" : "PST8PDT", "Central" : "CST6CDT", "Eastern" :"EST5EDT"}
 
 def home(request):
     context = {}
