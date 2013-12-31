@@ -15,7 +15,6 @@ import pytz
 
 MINUTE_CHOICES = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
 HOUR_CHOICES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
-TIMEZONE_CHOICES = {"Mountain" : "MST7MDT", "Pacific" : "PST8PDT", "Central" : "CST6CDT", "Eastern" :"EST5EDT"}
 
 def home(request):
     context = {}
@@ -23,7 +22,6 @@ def home(request):
     context['reminder_form'] = reminder_form
     context['minutes'] = MINUTE_CHOICES
     context['hours'] = HOUR_CHOICES
-    context['timezones'] = TIMEZONE_CHOICES
 
     if request.POST:   
         if 'phone_form' in request.POST:
@@ -50,6 +48,7 @@ def validate_phone(request, context):
 
 def create_reminder(request, context):
     reminder_form = ReminderForm(request.POST)
+    print request.POST
     if reminder_form.is_valid():
         reminder_form.save()
         provided_phone = reminder_form.cleaned_data["phone"]
@@ -89,10 +88,11 @@ def remind(request):
         if not user.isActive:
             continue
         time_string = str(reminder.date) + " " + str(reminder.hour) + ":" + str(reminder.minute) + str(reminder.ampm)
-        print reminder.timezone
-        timezone = dateutil.tz.gettz(TIMEZONE_CHOICES[reminder.timezone])
+
+        #timezone = dateutil.tz.gettz(TIMEZONE_CHOICES[reminder.timezone])
+        timezone = dateutil.tz.gettz(reminder.timezone)
         reminder_datetime = parser.parse(time_string).replace(tzinfo=timezone)
-        print reminder_datetime
+
         now = datetime.utcnow().replace(tzinfo = pytz.utc)
         if reminder_datetime.astimezone(pytz.utc) < now:
             client = TwilioRestClient(settings.TWILIO_SID, settings.TWILIO_AUTH_TOKEN)

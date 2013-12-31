@@ -10,12 +10,42 @@ Text Reminders
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
-
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
 <script>
+
+
   $(function() {
-     $("#id_date").datepicker();
-     $("#id_date").datepicker('setDate', new Date());
-   });
+  var currentTime = new Date();
+  var hours = currentTime.getHours();
+  var minutes = currentTime.getMinutes() ;
+  var rounded_minutes = Math.round(minutes/5) * 5;
+  var mid='AM';  
+  if(hours==0){ //At 00 hours we need to show 12 am
+  hours=12;
+  }
+  else if(hours>12){
+  hours=hours%12;
+  mid='PM';
+  }
+
+  var tz = jstz.determine(); // Determines the time zone of the browser client
+  $("#timezone").text(tz.name()); // Returns the name of the time zone eg "Europe/Berlin"
+  $("#id_timezone").val(tz.name()); 
+  var n = currentTime.getTimezoneOffset();
+  
+
+
+
+
+  $("#id_minute").val(rounded_minutes).change();   
+  $("#id_hour").val(hours).change();   
+  $("#id_ampm").val(mid).change();
+
+  $("#id_date").datepicker();
+  $("#id_date").datepicker('setDate', new Date());
+  
+  });
+
 </script>
 
 
@@ -85,13 +115,8 @@ $(document).ready(function(){
   <option value="PM">PM</option>
 </select>
 
-<select id="id_timezone" name="timezone">
-  {% for timezone in timezones  %}
-  <option value="{{timezone}}">{{timezone}}</option>
-  <p>{{ icon }}</p>
-  {% endfor %}
-</select>
-
+<text id="timezone"></text>
+<input type="hidden" name="timezone" value="" id="id_timezone"/>
 </p>
 
 <p>
