@@ -29,8 +29,8 @@ Text Reminders
   }
 
   var tz = jstz.determine(); // Determines the time zone of the browser client
-  $("#timezone").text(tz.name()); // Returns the name of the time zone eg "Europe/Berlin"
-  $("#id_timezone").val(tz.name().replace(/_/g, ' '));
+  $("#timezone").text(tz.name().replace(/_/g, ' ')); // Returns the name of the time zone eg "Europe/Berlin"
+  $("#id_timezone").val(tz.name());
  
 
   $("#id_minute").val(rounded_minutes).change();   
