@@ -30,12 +30,8 @@ Text Reminders
 
   var tz = jstz.determine(); // Determines the time zone of the browser client
   $("#timezone").text(tz.name()); // Returns the name of the time zone eg "Europe/Berlin"
-  $("#id_timezone").val(tz.name()); 
-  var n = currentTime.getTimezoneOffset();
-  
-
-
-
+  $("#id_timezone").val(tz.name().replace(/_/g, ' '));
+ 
 
   $("#id_minute").val(rounded_minutes).change();   
   $("#id_hour").val(hours).change();   
