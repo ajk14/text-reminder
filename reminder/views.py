@@ -30,6 +30,12 @@ def home(request):
             return create_reminder(request, context)
     return render(request, 'templates/index.html', context)
 
+def receive(request):
+    context = {}
+    print request.POST
+    return HttpResponse("Worked..." + str(request.POST))
+
+
 def validate_phone(request, context):
     phone = request.POST['phone']
     print request.POST
