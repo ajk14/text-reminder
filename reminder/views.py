@@ -84,12 +84,11 @@ def send_activation(request, phone):
 
 def receive(request):
     context = {}
-    phone = request.GET.get('From')
+    phone = request.GET.get('From')[-10:]
     body = request.GET.get('Body')
     
     delta = int(re.sub("\D", "", body))
-    print delta
-    print body
+    print phone
  
     if 'h' in body or 'H' in body:
         delta *= 60
