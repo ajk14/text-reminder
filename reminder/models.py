@@ -1,4 +1,7 @@
 from django.db import models
+from twilio.rest import TwilioRestClient
+from random import randint
+import dateutil.tz
 
 class Reminder(models.Model):
     message = models.CharField(max_length=180)
@@ -18,3 +21,10 @@ class User(models.Model):
             if reminder.time > latestReminder.time:
                 latestReminder = reminder
         return latestReminder
+
+    def createInactiveUser(phone):
+        user = User.objects.create(phone=provided_phone, isActive=False)
+        activation_key = send_activation(request, provided_phone)
+        user.confirmation = activation_key
+        user.save()
+        return user

@@ -10,6 +10,8 @@ urlpatterns = patterns('',
     url(r'^$', 'reminder.views.home', name='home'),
     url(r'^remind/', 'reminder.views.remind', name='remind'),
     url(r'^receive/', 'reminder.views.receive', name='receive'),
+    url(r'^confirm/', 'reminder.views.confirm_phone_json', name='confirm'),
+    url(r'^create/', 'reminder.views.create_reminder_json', name='create'),
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
     # url(r'^reminder/', include('reminder.foo.urls')),
 
